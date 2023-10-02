@@ -10,7 +10,7 @@ dotenv.config();
 export const SHEET_ID = "1Ms_HnCkGgZ4lOHHpfCChGZ1HuUuPQwufydfd7wur5zc";
 
 // Created a new JWT (JSON Web Token) client using the provided credentials
-const client = new google.auth.JWT(key.client_email, null, key.private_key, [
+const client = new google.auth.JWT(client_email, null, private_key, [
   "https://www.googleapis.com/auth/spreadsheets",
 ]);
 
