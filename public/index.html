@@ -6,15 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contact Form</title>
     <style>
+      /* Container styles */
       .container {
         width: 80%;
         margin: auto;
         margin-top: 50px;
       }
+
+      /* Form styles */
       form {
         font-family: Arial, sans-serif;
         color: #333;
       }
+
+      /* Submit button styles */
       input[type="text"],
       input[type="email"],
       input[type="number"] {
@@ -34,49 +39,88 @@
         cursor: pointer;
       }
       input[type="submit"]:hover {
-        background-color: #45a049;
+        background-color: #f23708;
       }
+
+      /* Error message styles */
       .error-message {
         color: red;
+      }
+
+      /* Responsive styles for screens up to 768px wide */
+      @media (max-width: 768px) {
+        .container {
+          width: 100%;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"] {
+          width: 100%;
+        }
+      }
+
+      /* Responsive styles for screens up to 480px wide */
+      @media (max-width: 480px) {
+        input[type="submit"] {
+          width: 100%;
+        }
       }
     </style>
   </head>
   <body>
     <div class="container">
       <form id="contactForm">
-        <h1>Add Data to Google Spreadsheet</h1>
+        <h3>Send Data to Google Spreadsheet</h3>
+
+        <!-- Name input and error message -->
         <label for="name">Name:</label><br />
         <input type="text" id="name" required /><br />
         <span class="error-message" id="nameError"></span><br />
 
+        <!-- Email input and error message -->
         <label for="email">Email:</label><br />
         <input type="email" id="email" required /><br />
         <span class="error-message" id="emailError"></span><br />
 
+        <!-- Age input and error message -->
         <label for="age">Age:</label><br />
         <input type="number" id="age" required /><br />
         <span class="error-message" id="ageError"></span><br />
 
+        <!-- Submit button -->
         <input type="submit" value="Send" />
       </form>
+
+      <!-- Success message -->
       <div id="successMessage" style="color: green"></div>
     </div>
+
+    <!-- JavaScript code to handle form submission and validation -->
     <script>
+      // Select the form and input elements by their IDs
       const contactForm = document.getElementById("contactForm");
       const nameInput = document.getElementById("name");
       const emailInput = document.getElementById("email");
       const ageInput = document.getElementById("age");
+
+      // Select error message elements for each input
       const nameError = document.getElementById("nameError");
       const emailError = document.getElementById("emailError");
       const ageError = document.getElementById("ageError");
+
+      // Select the success message element
       const successMessage = document.getElementById("successMessage");
 
+      // Add a submit event listener to the form
       contactForm.addEventListener("submit", async (e) => {
         e.preventDefault();
+        // Validate the form inputs
         if (!validateForm()) {
           return;
         }
         try {
+          // Send a POST request to the server
           const response = await fetch("http://localhost:8080/send-message", {
             method: "POST",
             headers: {
@@ -88,6 +132,8 @@
               age: ageInput.value,
             }),
           });
+
+          // Check the response status
           if (response.status === 200) {
             // Show the success message
             successMessage.textContent = "Data sent successfully";
@@ -108,6 +154,7 @@
         }
       });
 
+      // Function to validate the form inputs
       function validateForm() {
         let isValid = true;
 

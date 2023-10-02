@@ -12,6 +12,8 @@ app.use(express.json());
 
 app.use(express.static("public"));
 
+// route to handle POST requests to "/send-message"
+
 app.post("/send-message", async (req, res) => {
   try {
     const body = {
@@ -32,6 +34,8 @@ app.post("/send-message", async (req, res) => {
         values: [rows],
       },
     });
+
+    // Respond with a JSON success message
     res.json({ message: "Data added successfully" });
   } catch (error) {
     if (error) {
@@ -42,4 +46,5 @@ app.post("/send-message", async (req, res) => {
   }
 });
 
+// Starting the Express server and listen on port 8080
 app.listen(8080, () => console.log(`App running on http://localhost:8080`));
