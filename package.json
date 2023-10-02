@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Filling data to google spread sheet from automate appscript",
   "main": "server.js",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/server.js"
