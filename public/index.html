@@ -95,6 +95,10 @@
             nameInput.value = "";
             emailInput.value = "";
             ageInput.value = "";
+            // hide message after 1 sec
+            setTimeout(() => {
+              successMessage.textContent = "";
+            }, 1000);
           } else {
             // Handle other responses (e.g., server error)
             console.error("An error occurred:", response.statusText);
