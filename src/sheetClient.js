@@ -2,7 +2,7 @@ import { google } from "googleapis";
 import dotenv from "dotenv";
 
 // Importing the credentials (client_email and private_key) from the secrets.json file
-// import key from "../secrets.json" assert { type: "json" };
+import key from "../secrets.json" assert { type: "json" };
 
 dotenv.config();
 
@@ -10,7 +10,7 @@ dotenv.config();
 export const SHEET_ID = "1Ms_HnCkGgZ4lOHHpfCChGZ1HuUuPQwufydfd7wur5zc";
 
 // Created a new JWT (JSON Web Token) client using the provided credentials
-const client = new google.auth.JWT(client_email, null, private_key, [
+const client = new google.auth.JWT(key.client_email, null, key.private_key, [
   "https://www.googleapis.com/auth/spreadsheets",
 ]);
 
