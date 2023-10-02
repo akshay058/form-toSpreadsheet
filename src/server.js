@@ -1,0 +1,45 @@
+import express from "express";
+import sheets, { SHEET_ID } from "./sheetClient.js";
+// import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config();
+
+const app = express();
+
+app.use(express.json());
+
+// app.use(cors());
+
+app.use(express.static("public"));
+
+app.post("/send-message", async (req, res) => {
+  try {
+    const body = {
+      ...req.body,
+      age: parseInt(req.body.age), // Convert age to a number
+    };
+
+    // Object to Sheets
+    const rows = Object.values(body);
+    console.log("hello", rows);
+
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: SHEET_ID,
+      range: "Data!A:C",
+      insertDataOption: "INSERT_ROWS",
+      valueInputOption: "RAW",
+      requestBody: {
+        values: [rows],
+      },
+    });
+    res.json({ message: "Data added successfully" });
+  } catch (error) {
+    if (error) {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error });
+    }
+  }
+});
+
+app.listen(8080, () => console.log(`App running on http://localhost:8080`));

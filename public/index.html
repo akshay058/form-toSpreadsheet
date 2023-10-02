@@ -15,10 +15,9 @@
         font-family: Arial, sans-serif;
         color: #333;
       }
-
       input[type="text"],
       input[type="email"],
-      number {
+      input[type="number"] {
         width: 100%;
         padding: 12px;
         border: 1px solid #ccc;
@@ -27,7 +26,6 @@
         margin-bottom: 16px;
         resize: vertical;
       }
-
       input[type="submit"] {
         background-color: #4caf50;
         color: white;
@@ -35,47 +33,107 @@
         border: none;
         cursor: pointer;
       }
-
       input[type="submit"]:hover {
         background-color: #45a049;
+      }
+      .error-message {
+        color: red;
       }
     </style>
   </head>
   <body>
     <div class="container">
       <form id="contactForm">
+        <h1>Add Data to Google Spreadsheet</h1>
         <label for="name">Name:</label><br />
-        <input type="text" id="name" /><br />
+        <input type="text" id="name" required /><br />
+        <span class="error-message" id="nameError"></span><br />
+
         <label for="email">Email:</label><br />
-        <input type="email" id="email" /><br />
+        <input type="email" id="email" required /><br />
+        <span class="error-message" id="emailError"></span><br />
+
         <label for="age">Age:</label><br />
-        <input type="number" id="age"></input><br />
+        <input type="number" id="age" required /><br />
+        <span class="error-message" id="ageError"></span><br />
+
         <input type="submit" value="Send" />
       </form>
+      <div id="successMessage" style="color: green"></div>
     </div>
     <script>
       const contactForm = document.getElementById("contactForm");
       const nameInput = document.getElementById("name");
       const emailInput = document.getElementById("email");
       const ageInput = document.getElementById("age");
+      const nameError = document.getElementById("nameError");
+      const emailError = document.getElementById("emailError");
+      const ageError = document.getElementById("ageError");
+      const successMessage = document.getElementById("successMessage");
 
       contactForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const response=await fetch("http://localhost/send-message", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: nameInput.value,
-            email: emailInput.value,
-            age: ageInput.value,
-          }),
-        });
-        nameInput.value = "";
-        emailInput.value = "";
-        ageInput.value = "";
+        if (!validateForm()) {
+          return;
+        }
+        try {
+          const response = await fetch("http://localhost:8080/send-message", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: nameInput.value,
+              email: emailInput.value,
+              age: ageInput.value,
+            }),
+          });
+          if (response.status === 200) {
+            // Show the success message
+            successMessage.textContent = "Data sent successfully";
+            // Clear the form inputs
+            nameInput.value = "";
+            emailInput.value = "";
+            ageInput.value = "";
+          } else {
+            // Handle other responses (e.g., server error)
+            console.error("An error occurred:", response.statusText);
+          }
+        } catch (error) {
+          console.error("An error occurred:", error);
+        }
       });
+
+      function validateForm() {
+        let isValid = true;
+
+        if (nameInput.value.trim() === "") {
+          nameError.textContent = "Name is required";
+          isValid = false;
+        } else {
+          nameError.textContent = "";
+        }
+
+        if (emailInput.value.trim() === "") {
+          emailError.textContent = "Email is required";
+          isValid = false;
+        } else {
+          emailError.textContent = "";
+        }
+
+        const ageValue = ageInput.value.trim();
+        if (ageValue === "") {
+          ageError.textContent = "Age is required";
+          isValid = false;
+        } else if (isNaN(ageValue) || parseFloat(ageValue) < 0) {
+          ageError.textContent = "Age must be a positive number";
+          isValid = false;
+        } else {
+          ageError.textContent = "";
+        }
+
+        return isValid;
+      }
     </script>
   </body>
 </html>
