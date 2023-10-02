@@ -2,7 +2,7 @@ import { google } from "googleapis";
 import dotenv from "dotenv";
 
 // Importing the credentials (client_email and private_key) from the secrets.json file
-import key from "../secrets.json" assert { type: "json" };
+import key from "../secrets.json";
 
 dotenv.config();
 
